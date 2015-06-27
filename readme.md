@@ -1,7 +1,7 @@
 Heroku buildpack: Kibana
 ========================
 
-This is a [Heroku buildpack](http://devcenter.heroku.com/articles/buildpacks) that runs a [kibana](https://www.elastic.co/downloads/kibana) server.
+This is a [Heroku buildpack](http://devcenter.heroku.com/articles/buildpacks) that serves up [kibana](https://www.elastic.co/downloads/kibana).
 
 Compatibility
 -------------
