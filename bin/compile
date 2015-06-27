@@ -60,12 +60,9 @@ if [ ! -f "$CACHE_DIR/$KIBANA_PACKAGE" ]; then
   else
     exit 1
   fi
-
-  $extract $CACHE_DIR/$KIBANA_PACKAGE
-else
-  echo "Using cached copy" | indent
-  exit 0
 fi
+
+$extract $CACHE_DIR/$KIBANA_PACKAGE
 
 echo "-----> Configuring ELASTICSEARCH_URL"
 $configure $KIBANA_DIR/config/kibana.yml
