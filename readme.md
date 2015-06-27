@@ -23,6 +23,9 @@ Usage
     $ heroku config:set ELASTICSEARCH_URL="https://user:pass@elastic.cluster.com:9200"
     $ heroku config:set DOWNLOAD_URL="https://download.elastic.co/kibana/kibana/kibana-4.1.0-linux-x64.tar.gz"
 
+    $ cat Procfile
+    web: kibana
+
     $ git push heroku master
 
     # verify and profit!
