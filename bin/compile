@@ -1,0 +1,73 @@
+#!/bin/sh
+
+indent() {
+  sed -u 's/^/       /'
+}
+
+BUILD_DIR=$1
+CACHE_DIR=$2
+ENV_DIR=$3
+
+INIT_SCRIPT="$BUILD_DIR/.profile.d/kibana.sh"
+
+if [ -f "$ENV_DIR/ELASTICSEARCH_URL" ]; then
+  ELASTICSEARCH_URL=$(cat $ENV_DIR/ELASTICSEARCH_URL)
+else
+  ELASTICSEARCH_URL="http://localhost:9200"
+fi
+
+if [ -f "$ENV_DIR/DOWNLOAD_URL" ]; then
+  DOWNLOAD_URL=$(cat $ENV_DIR/DOWNLOAD_URL)
+else
+  DOWNLOAD_URL="https://download.elastic.co/kibana/kibana/kibana-4.1.0-linux-x64.tar.gz"
+fi
+
+KIBANA_PACKAGE=${DOWNLOAD_URL##*/}
+
+case ${KIBANA_PACKAGE} in
+  *.tar.gz)
+    KIBANA_DIR="$BUILD_DIR/${KIBANA_PACKAGE%%.tar.gz}"
+    tar="tar xz"
+    ;;
+  *)
+    echo "Only tar.gz is supported: $KIBANA_PACKAGE" | indent
+    exit 1
+    ;;
+esac
+
+mkdir="mkdir -p"
+download="curl -sLO"
+extract="$tar -C $BUILD_DIR --wildcards -f"
+verify="sha1sum --check --warn"
+configure='sed -i s/^\(elasticsearch_url:\x20\).\{1,\}/\1"'$(echo $ELASTICSEARCH_URL | sed 's/\//\\\//g')'"/'
+
+
+echo "-----> Installing kibana..."
+
+$mkdir ${INIT_SCRIPT%/*}
+
+if [ ! -f "$CACHE_DIR/$KIBANA_PACKAGE" ]; then
+  echo "downloading $DOWNLOAD_URL" | indent
+  $download $DOWNLOAD_URL
+
+  echo "verifying against ${DOWNLOAD_URL}.sha1.txt" | indent
+  $download "${DOWNLOAD_URL}.sha1.txt"
+  $verify "${KIBANA_PACKAGE}.sha1.txt"
+
+  if [ $? -eq 0 ]; then
+    mv $KIBANA_PACKAGE $CACHE_DIR
+  else
+    exit 1
+  fi
+
+  $extract $CACHE_DIR/$KIBANA_PACKAGE
+else
+  echo "Using cached copy" | indent
+  exit 0
+fi
+
+echo "-----> Configuring ELASTICSEARCH_URL"
+$configure $KIBANA_DIR/config/kibana.yml
+
+echo "Exporting PATH" | indent
+echo 'export PATH="$PATH:'$KIBANA_DIR'/bin"' > $INIT_SCRIPT
