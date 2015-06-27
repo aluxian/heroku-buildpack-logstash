@@ -24,7 +24,7 @@ Usage
     $ heroku config:set DOWNLOAD_URL="https://download.elastic.co/kibana/kibana/kibana-4.1.0-linux-x64.tar.gz"
 
     $ cat Procfile
-    web: kibana
+    web: kibana --port $PORT
 
     $ git push heroku master
 

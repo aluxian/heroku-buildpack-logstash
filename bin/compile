@@ -39,7 +39,7 @@ mkdir="mkdir -p"
 download="curl -sLO"
 extract="$tar -C $BUILD_DIR --wildcards -f"
 verify="sha1sum --check --warn"
-configure='sed -i -e s/\(port:\x20\).\{1,\}/\180/ -e s/^\(elasticsearch_url:\x20\).\{1,\}/\1"'$(echo $ELASTICSEARCH_URL | sed 's/\//\\\//g')'"/'
+configure='sed -i s/^\(elasticsearch_url:\x20\).\{1,\}/\1"'$(echo $ELASTICSEARCH_URL | sed 's/\//\\\//g')'"/'
 
 
 echo "-----> Installing kibana..."
