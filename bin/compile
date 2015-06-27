@@ -45,6 +45,7 @@ configure='sed -i -e s/\(port:\x20\).\{1,\}/\180/ -e s/^\(elasticsearch_url:\x20
 echo "-----> Installing kibana..."
 
 $mkdir ${INIT_SCRIPT%/*}
+$mkdir $CACHE_DIR
 
 if [ ! -f "$CACHE_DIR/$KIBANA_PACKAGE" ]; then
   echo "downloading $DOWNLOAD_URL" | indent
