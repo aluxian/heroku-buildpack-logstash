@@ -10,7 +10,9 @@ ENV_DIR=$3
 
 INIT_SCRIPT="$BUILD_DIR/.profile.d/kibana.sh"
 
-if [ -f "$ENV_DIR/ELASTICSEARCH_URL" ]; then
+if [ -f "$ENV_DIR/BONSAI_URL" ]; then
+  ELASTICSEARCH_URL=$(cat $ENV_DIR/BONSAI_URL)
+elif [ -f "$ENV_DIR/ELASTICSEARCH_URL" ]; then
   ELASTICSEARCH_URL=$(cat $ENV_DIR/ELASTICSEARCH_URL)
 else
   ELASTICSEARCH_URL="http://localhost:9200"
@@ -42,7 +44,7 @@ verify="sha1sum --check --warn"
 configure='sed -i s/^\(elasticsearch_url:\x20\).\{1,\}/\1"'$(echo $ELASTICSEARCH_URL | sed 's/\//\\\//g')'"/'
 
 
-echo "-----> Installing kibana..."
+echo "-----> Installing Kibana..."
 
 $mkdir ${INIT_SCRIPT%/*}
 $mkdir $CACHE_DIR
