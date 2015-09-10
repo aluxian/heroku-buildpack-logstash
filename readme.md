@@ -6,7 +6,7 @@ For a one-click deploy of Kibana on Heroku, see [omc/heroku-kibana](https://gith
 
 ## Compatibility
 
-Tested against Kibana 4.1.0.
+Tested against Kibana 4.1.2.
 
 ## Usage
 
@@ -21,7 +21,7 @@ Or, to use as a standalone buildpack:
     $ heroku buildpacks:set https://github.com/omc/heroku-buildpack-kibana
 
     # Let the buildpack know where to find Kibana
-    $ heroku config:set DOWNLOAD_URL="https://download.elastic.co/kibana/kibana/kibana-4.1.0-linux-x64.tar.gz"
+    $ heroku config:set DOWNLOAD_URL="https://download.elastic.co/kibana/kibana/kibana-4.1.2-linux-x64.tar.gz"
 
     # Let Kibana know where to find Elasticsearch
     $ heroku config:set ELASTICSEARCH_URL="https://kibanauser:kibanapass@host.region.bonsai.io"
