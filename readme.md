@@ -19,7 +19,7 @@ As a standalone buildpack:
     $ heroku config:set ELASTICSEARCH_URL="https://logstashuser:logstashpass@host.region.bonsai.io"
 
     # Create a Procfile to run the Logstash web server
-    $ cat Procfile
+    $ cat Procfileg
     web: logstash agent -f logstash.conf
 
     # Create a logstash.conf
