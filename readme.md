@@ -1,34 +1,29 @@
-# Heroku Buildpack for Kibana
+# Heroku Buildpack for Logstash
 
-This buildpack downloads and installs Kibana into a Heroku app slug. It is a fork of [issueapp/heroku-buildpack-kibana](https://github.com/issueapp/heroku-buildpack-kibana), with some light customization for use as a one-click Heroku Button app.
-
-For a one-click deploy of Kibana on Heroku, see [omc/heroku-kibana](https://github.com/omc/heroku-kibana).
-
-## Compatibility
-
-Tested against Kibana 4.1.2.
+This buildpack downloads and installs Logstash into a Heroku app slug. It is a fork of [omc/heroku-buildpack-kibana](https://github.com/omc/heroku-buildpack-kibana).
 
 ## Usage
 
-See our other repo at https://github.com/omc/heroku-kibana for a one-click deploy of Kibana on Heroku.
-
-Or, to use as a standalone buildpack:
+As a standalone buildpack:
 
     # Create a new project with the --buildpack option
-    $ heroku create --buildpack https://github.com/omc/heroku-buildpack-kibana
+    $ heroku create --buildpack https://github.com/Aluxian/heroku-buildpack-logstash
 
     # ...Or update an existing project with heroku buildpacks:set
-    $ heroku buildpacks:set https://github.com/omc/heroku-buildpack-kibana
+    $ heroku buildpacks:set https://github.com/Aluxian/heroku-buildpack-logstash
 
-    # Let the buildpack know where to find Kibana
-    $ heroku config:set DOWNLOAD_URL="https://download.elastic.co/kibana/kibana/kibana-4.1.2-linux-x64.tar.gz"
+    # Let the buildpack know where to find Logstash
+    $ heroku config:set DOWNLOAD_URL="https://download.elastic.co/logstash/logstash/logstash-2.3.1.tar.gz"
 
-    # Let Kibana know where to find Elasticsearch
-    $ heroku config:set ELASTICSEARCH_URL="https://kibanauser:kibanapass@host.region.bonsai.io"
+    # Let Logstash know where to find Elasticsearch
+    $ heroku config:set ELASTICSEARCH_URL="https://logstashuser:logstashpass@host.region.bonsai.io"
 
-    # Create a Procfile to run the Kibana web server
+    # Create a Procfile to run the Logstash web server
     $ cat Procfile
-    web: kibana --port $PORT
+    web: logstash agent -f logstash.conf
+
+    # Create a logstash.conf
+    $ ...
 
     # Push the above to trigger a deploy
     $ git push heroku master

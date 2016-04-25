@@ -1,4 +1,4 @@
 #!/bin/sh
 
-echo "kibana"
+echo "logstash"
 exit 0

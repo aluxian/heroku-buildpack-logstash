@@ -8,7 +8,7 @@ BUILD_DIR=$1
 CACHE_DIR=$2
 ENV_DIR=$3
 
-INIT_SCRIPT="$BUILD_DIR/.profile.d/kibana.sh"
+INIT_SCRIPT="$BUILD_DIR/.profile.d/logstash.sh"
 
 if [ -f "$ENV_DIR/BONSAI_URL" ]; then
   ELASTICSEARCH_URL=$(cat $ENV_DIR/BONSAI_URL)
@@ -21,18 +21,18 @@ fi
 if [ -f "$ENV_DIR/DOWNLOAD_URL" ]; then
   DOWNLOAD_URL=$(cat $ENV_DIR/DOWNLOAD_URL)
 else
-  DOWNLOAD_URL="https://download.elastic.co/kibana/kibana/kibana-4.5.0-linux-x64.tar.gz"
+  DOWNLOAD_URL="https://download.elastic.co/logstash/logstash/logstash-2.3.1.tar.gz"
 fi
 
-KIBANA_PACKAGE=${DOWNLOAD_URL##*/}
+LOGSTASH_PACKAGE=${DOWNLOAD_URL##*/}
 
-case ${KIBANA_PACKAGE} in
+case ${LOGSTASH_PACKAGE} in
   *.tar.gz)
-    KIBANA_DIR="$BUILD_DIR/${KIBANA_PACKAGE%%.tar.gz}"
+    LOGSTASH_DIR="$BUILD_DIR/${LOGSTASH_PACKAGE%%.tar.gz}"
     tar="tar xz"
     ;;
   *)
-    echo "Only tar.gz is supported: $KIBANA_PACKAGE" | indent
+    echo "Only tar.gz is supported: $LOGSTASH_PACKAGE" | indent
     exit 1
     ;;
 esac
@@ -42,30 +42,27 @@ download="curl -sLO"
 extract="$tar -C $BUILD_DIR --wildcards -f"
 verify="sha1sum --check --warn"
 
-echo "-----> Installing Kibana..."
+echo "-----> Installing Logstash..."
 
 $mkdir ${INIT_SCRIPT%/*}
 $mkdir $CACHE_DIR
 
-if [ ! -f "$CACHE_DIR/$KIBANA_PACKAGE" ]; then
+if [ ! -f "$CACHE_DIR/$LOGSTASH_PACKAGE" ]; then
   echo "downloading $DOWNLOAD_URL" | indent
   $download $DOWNLOAD_URL
 
   echo "verifying against ${DOWNLOAD_URL}.sha1.txt" | indent
   $download "${DOWNLOAD_URL}.sha1.txt"
-  $verify "${KIBANA_PACKAGE}.sha1.txt"
+  $verify "${LOGSTASH_PACKAGE}.sha1.txt"
 
   if [ $? -eq 0 ]; then
-    mv $KIBANA_PACKAGE $CACHE_DIR
+    mv $LOGSTASH_PACKAGE $CACHE_DIR
   else
     exit 1
   fi
 fi
 
-$extract $CACHE_DIR/$KIBANA_PACKAGE
-
-echo "-----> Configuring ELASTICSEARCH_URL"
-echo "elasticsearch.url: \"$ELASTICSEARCH_URL\"" >> $KIBANA_DIR/config/kibana.yml
+$extract $CACHE_DIR/$LOGSTASH_PACKAGE
 
 echo "Exporting PATH" | indent
-echo 'export PATH="$PATH:'${KIBANA_DIR##*/}'/bin"' > $INIT_SCRIPT
+echo 'export PATH="$PATH:'${LOGSTASH_DIR##*/}'/bin"' > $INIT_SCRIPT
